@@ -8,15 +8,13 @@
 
 class BigInt {
 public:
-    std::vector<uint64_t> digits; 
+    std::vector<uint64_t> digits; // Đã đổi sang uint64_t theo khung code bạn đưa
     bool is_negative;
 
-    // --- CONSTRUCTORS ---
-    BigInt();                               // Khởi tạo giá trị 0
-    BigInt(long long value);                // Khởi tạo từ số nguyên
-    BigInt(const std::string& str_value);   // Khởi tạo từ chuỗi (để nhập số nguyên tố rất lớn)
+    BigInt();
+    BigInt(long long value);
+    BigInt(const std::string& str_value);
 
-    // --- TOÁN TỬ SO SÁNH ---
     bool operator==(const BigInt& other) const;
     bool operator!=(const BigInt& other) const;
     bool operator<(const BigInt& other) const;
@@ -24,28 +22,32 @@ public:
     bool operator>(const BigInt& other) const;
     bool operator>=(const BigInt& other) const;
 
-    // --- TOÁN TỬ SỐ HỌC CƠ BẢN ---
     BigInt operator+(const BigInt& other) const;
     BigInt operator-(const BigInt& other) const;
     BigInt operator*(const BigInt& other) const;
     BigInt operator/(const BigInt& other) const;
     BigInt operator%(const BigInt& other) const;
 
-    // --- TOÁN TỬ GÁN VÀ SỐ HỌC (+=, -=, *=, /=, %=) ---
     BigInt& operator+=(const BigInt& other);
     BigInt& operator-=(const BigInt& other);
     BigInt& operator*=(const BigInt& other);
     BigInt& operator/=(const BigInt& other);
     BigInt& operator%=(const BigInt& other);
 
-    // --- TOÁN TỬ NHẬP XUẤT (I/O) ---
-    // Khai báo là hàm friend để truy cập vào thuộc tính của lớp BigInt
     friend std::ostream& operator<<(std::ostream& os, const BigInt& num);
     friend std::istream& operator>>(std::istream& is, BigInt& num);
-    
+
 private:
-    // Hàm phụ trợ chuẩn hóa mảng (loại bỏ các số 0 vô nghĩa ở đầu)
     void remove_leading_zeros();
+    
+    static int compare_magnitude(const BigInt& a, const BigInt& b);
+    static BigInt add_magnitude(const BigInt& a, const BigInt& b);
+    static BigInt sub_magnitude(const BigInt& a, const BigInt& b);
+    static void divmod_internal(const BigInt& A, const BigInt& B, BigInt& Q, BigInt& R);
+    
+    static void shift_left_words(std::vector<uint64_t>& a, int s);
+    static void shift_right_words(std::vector<uint64_t>& a, int s);
+    static int count_leading_zeros(uint64_t x);
 };
 
 #endif // BIGINT_H
