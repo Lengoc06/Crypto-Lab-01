@@ -310,6 +310,29 @@ void BigInt::remove_leading_zeros() {
     }
 }
 
+void BigInt::shift_left_words(std::vector<uint64_t>& a, int s) {
+    if (s == 0) return;
+    uint64_t carry = 0;
+    for (size_t i = 0; i < a.size(); ++i) {
+        uint64_t cur = a[i];
+        a[i] = (cur << s) | carry;
+        carry = cur >> (64 - s);
+    }
+    if (carry > 0) {
+        a.push_back(carry);
+    }
+}
+
+void BigInt::shift_right_words(std::vector<uint64_t>& a, int s) {
+    if (s == 0) return;
+    uint64_t carry = 0;
+    for (size_t i = a.size(); i-- > 0; ) {
+        uint64_t cur = a[i];
+        a[i] = (cur >> s) | carry;
+        carry = cur << (64 - s);
+    }
+}
+
 int BigInt::compare_magnitude(const BigInt& a, const BigInt& b) {
     if (a.digits.size() < b.digits.size()) return -1;
     if (a.digits.size() > b.digits.size()) return 1;
@@ -361,29 +384,6 @@ int BigInt::count_leading_zeros(uint64_t x) {
         x <<= 1;
     }
     return count;
-}
-
-void BigInt::shift_left_words(std::vector<uint64_t>& a, int s) {
-    if (s == 0) return;
-    uint64_t carry = 0;
-    for (size_t i = 0; i < a.size(); ++i) {
-        uint64_t cur = a[i];
-        a[i] = (cur << s) | carry;
-        carry = cur >> (64 - s);
-    }
-    if (carry > 0) {
-        a.push_back(carry);
-    }
-}
-
-void BigInt::shift_right_words(std::vector<uint64_t>& a, int s) {
-    if (s == 0) return;
-    uint64_t carry = 0;
-    for (size_t i = a.size(); i-- > 0; ) {
-        uint64_t cur = a[i];
-        a[i] = (cur >> s) | carry;
-        carry = cur << (64 - s);
-    }
 }
 
 void BigInt::divmod_internal(const BigInt& A, const BigInt& B, BigInt& Q, BigInt& R) {
