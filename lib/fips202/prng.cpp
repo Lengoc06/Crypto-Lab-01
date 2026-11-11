@@ -7,6 +7,9 @@ void randombytes(uint8_t *out, uint8_t outlen)
 #ifdef _WIN32
     if (BCryptGenRandom(NULL, out, outlen, BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
         abort();
+#elif defined(__APPLE__)
+    if (outlen > 0 && getentropy(out, outlen) != 0)
+        abort();
 #else
     ssize_t ret;
     while (outlen > 0)
