@@ -1,4 +1,5 @@
 #include "MathUtils.h"
+#include "fips202/prng.h"
 
 BigInt modular_exponentiation(BigInt base, BigInt exponent, BigInt mod) {
     BigInt result(1);
@@ -25,8 +26,31 @@ BigInt generate_safe_prime(int bit_size) {
 
 BigInt generate_secure_random(int bit_size) {
     BigInt random_num;
-    // TODO: Cài đặt logic sinh số ngẫu nhiên an toàn trên máy tính.
-    // Không sử dụng rand() của thư viện C cũ vì không đủ an toàn cho mật mã.
+    if (bit_size <= 0) {
+        return random_num;
+    }
+
+    uint8_t seed[32];
+    randombytes(seed, sizeof(seed));
+
+    prng_ctx ctx;
+    prng_seed(&ctx, seed, sizeof(seed));
+
+    int num_words = (bit_size + 63) / 64;
+    random_num.digits.resize(num_words);
+    random_num.is_negative = false;
+
+    for (int i = 0; i < num_words; ++i) {
+        random_num.digits[i] = prng_next_u64(&ctx);
+    }
+
+    int rem = bit_size % 64;
+    if (rem != 0) {
+        random_num.digits.back() &= (1ULL << rem) - 1ULL;
+    }
+
+    random_num.digits.back() |= (1ULL << ((bit_size - 1) % 64));
+
     return random_num;
 }
 

@@ -2,7 +2,12 @@
 #define PRNG_H
 #include "fips202.h"
 #include <stdlib.h>
+#ifdef _WIN32
+#include <windows.h>
+#include <bcrypt.h>
+#else
 #include <sys/random.h>
+#endif
 #include <errno.h>
 
 typedef struct

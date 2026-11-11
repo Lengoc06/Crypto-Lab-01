@@ -4,6 +4,10 @@
 // you may need to use a different method to get random bytes.
 void randombytes(uint8_t *out, uint8_t outlen)
 {
+#ifdef _WIN32
+    if (BCryptGenRandom(NULL, out, outlen, BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
+        abort();
+#else
     ssize_t ret;
     while (outlen > 0)
     {
@@ -15,6 +19,7 @@ void randombytes(uint8_t *out, uint8_t outlen)
         out += ret;
         outlen -= ret;
     }
+#endif
 }
 
 void prng_seed(prng_ctx *ctx, const uint8_t *seed, size_t seedlen)
