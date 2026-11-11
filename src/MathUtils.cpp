@@ -15,7 +15,7 @@ BigInt modular_exponentiation(BigInt base, BigInt exponent, BigInt mod) {
             result = (result * base) % mod;
         }
 
-        exponent.shift_right(1);
+        exponent.shift_right_words(exponent.digits, 1);
 
         base = (base * base) % mod;
     }
