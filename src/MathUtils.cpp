@@ -1,8 +1,6 @@
 #include "MathUtils.h"
 
 BigInt modular_exponentiation(BigInt base, BigInt exponent, BigInt mod) {
-    // TODO: Cài đặt logic tính (base^exponent) % mod.
-    // Lưu ý: Cần xử lý hiệu quả để không bị tràn bộ nhớ hoặc chạy quá chậm với số lớn 512 bit.
     if (mod == BigInt(1)) {
         return BigInt(0);
     }
@@ -16,6 +14,7 @@ BigInt modular_exponentiation(BigInt base, BigInt exponent, BigInt mod) {
         }
 
         exponent.shift_right_words(exponent.digits, 1);
+        exponent.remove_leading_zeros();
 
         base = (base * base) % mod;
     }
@@ -47,8 +46,6 @@ BigInt generate_secure_random(int bit_size) {
 }
 
 BigInt generate_private_key(BigInt p) {
-    // TODO: Sử dụng cơ chế sinh số ngẫu nhiên để tạo khóa riêng.
-    // Điều kiện bắt buộc: Khóa riêng phải nằm trong khoảng [2, p-2].
     int bit_size = p.digits.size() * 64;
 
     BigInt range = p - BigInt(3);
