@@ -7,7 +7,7 @@
 constexpr int MAX_PRIME = 2039;
 constexpr int PRIME_COUNT = 308; // Số lượng số nguyên tố lẻ từ 3 đến 2039
 //bỏ qua số 2 vì hàm miller_rabin_test có ktra số chẵn hay ko rồi
-static constexpr std::array<uint16_t, PRIME_COUNT> generate_primes() {
+static std::array<uint16_t, PRIME_COUNT> generate_primes() {
     std::array<uint16_t, PRIME_COUNT> primes{};
     int index = 0;
     for (int i = 3; i <= MAX_PRIME; i += 2) {
@@ -22,7 +22,7 @@ static constexpr std::array<uint16_t, PRIME_COUNT> generate_primes() {
     }
     return primes;
 }
-static constexpr auto small_primes = generate_primes();
+static const auto small_primes = generate_primes();
 
 static uint64_t mod_u64(const BigInt& num, uint64_t m) {
     __uint128_t rem = 0;
